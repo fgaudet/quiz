@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Starter, Builder, Fixer, or Runner Quiz</title>
+<style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h2 { color: #333; }
+    .question { margin-bottom: 20px; }
+    .options { list-style-type: none; padding: 0; }
+    .options li { margin-bottom: 10px; }
+    #result { font-size: 1.2em; margin-top: 20px; }
+    button { padding: 10px 20px; font-size: 1em; }
+    ul { list-style-type: none; padding: 0; }
+    li { margin-bottom: 5px; }
+</style>
+</head>
+<body>
+
+<h1>Discover Your Preferred Role: Starter, Builder, Fixer, or Runner</h1>
+
+<div id="quiz"></div>
+<button onclick="submitQuiz()">Submit Quiz</button>
+
+<div id="result"></div>
+
+<script>
+const questions = [
+    {
+        question: "1. You are assigned to a new project that is currently undefined and has no clear direction. What do you do?",
+        options: {
+            a: "Analyze the situation to identify potential issues and create solutions to address them.",
+            b: "Start brainstorming and developing new ideas to give the project direction.",
+            c: "Establish processes to maintain consistency and ensure the project runs smoothly.",
+            d: "Look for ways to integrate the project into existing frameworks to expand on current initiatives."
+        },
+        answers: {
+            a: "Fixer",
+            b: "Starter",
+            c: "Runner",
+            d: "Builder"
+        }
+    },
+    {
+        question: "2. Your company is launching a new product, but initial sales are low. What is your approach?",
+        options: {
+            a: "Focus on optimizing the current sales process to improve efficiency.",
+            b: "Enhance existing marketing efforts to reach a wider audience and increase sales.",
+            c: "Investigate the product and sales process to identify problems and implement fixes.",
+            d: "Develop innovative marketing strategies to boost interest in the product."
+        },
+        answers: {
+            a: "Runner",
+            b: "Builder",
+            c: "Fixer",
+            d: "Starter"
+        }
+    },
+    {
+        question: "3. A team you're leading is facing low morale due to a series of setbacks. How do you handle the situation?",
+        options: {
+            a: "Identify the root causes of the setbacks and work on solving them.",
+            b: "Provide steady guidance and reinforce the team's confidence through consistent support.",
+            c: "Set ambitious goals to drive the team towards greater achievements.",
+            d: "Motivate the team with a new vision and innovative ideas to inspire them."
+        },
+        answers: {
+            a: "Fixer",
+            b: "Runner",
+            c: "Builder",
+            d: "Starter"
+        }
+    },
+    {
+        question: "4. An outdated system is causing delays in your department. What do you decide to do?",
+        options: {
+            a: "Troubleshoot the system to fix the current issues causing delays.",
+            b: "Maintain the system while implementing minor updates to keep operations steady.",
+            c: "Improve the existing system to handle increased workload efficiently.",
+            d: "Propose a complete overhaul with new innovative technology."
+        },
+        answers: {
+            a: "Fixer",
+            b: "Runner",
+            c: "Builder",
+            d: "Starter"
+        }
+    },
+    {
+        question: "5. You have an opportunity to take on a new role in a different department. What excites you the most about this prospect?",
+        options: {
+            a: "The ability to ensure the department runs smoothly and efficiently.",
+            b: "The chance to bring fresh ideas and start new initiatives.",
+            c: "The possibility of turning around any existing problems in the department.",
+            d: "The opportunity to build on existing successes and expand them further."
+        },
+        answers: {
+            a: "Runner",
+            b: "Starter",
+            c: "Fixer",
+            d: "Builder"
+        }
+    },
+    {
+        question: "6. During a project, you encounter unexpected challenges. How do you respond?",
+        options: {
+            a: "Adjust your plans to accommodate the challenges and aim for greater outcomes.",
+            b: "Stick to established procedures to navigate through the challenges steadily.",
+            c: "Work to quickly resolve the issues to get back on track.",
+            d: "See this as an opportunity to innovate and try new approaches."
+        },
+        answers: {
+            a: "Builder",
+            b: "Runner",
+            c: "Fixer",
+            d: "Starter"
+        }
+    },
+    {
+        question: "7. A client is unhappy with your product/service. What is your course of action?",
+        options: {
+            a: "Reassure the client through consistent service and reliability.",
+            b: "Propose new features or services that could exceed the client's expectations.",
+            c: "Address the client's concerns by identifying and fixing the underlying problems.",
+            d: "Offer to enhance the current product/service to better meet their needs."
+        },
+        answers: {
+            a: "Runner",
+            b: "Starter",
+            c: "Fixer",
+            d: "Builder"
+        }
+    },
+    {
+        question: "8. Your organization is considering entering a new market. How do you contribute?",
+        options: {
+            a: "Ensure current operations remain stable during the expansion.",
+            b: "Develop innovative strategies to approach the new market.",
+            c: "Conduct analysis to solve potential issues and mitigate risks.",
+            d: "Plan how to scale existing operations to support market expansion."
+        },
+        answers: {
+            a: "Runner",
+            b: "Starter",
+            c: "Fixer",
+            d: "Builder"
+        }
+    },
+    {
+        question: "9. Your team is consistently meeting targets, but growth has plateaued. What do you suggest?",
+        options: {
+            a: "Identify obstacles hindering growth and find solutions.",
+            b: "Introduce new ideas to stimulate growth and take the team to the next level.",
+            c: "Maintain current practices to ensure continued success.",
+            d: "Encourage the team to think creatively and explore new opportunities."
+        },
+        answers: {
+            a: "Fixer",
+            b: "Builder",
+            c: "Runner",
+            d: "Starter"
+        }
+    },
+    {
+        question: "10. A new policy implementation is causing confusion among staff. How do you address this?",
+        options: {
+            a: "Develop a plan to integrate the policy smoothly into existing processes.",
+            b: "Create innovative training materials to help staff understand the policy.",
+            c: "Provide consistent support and clear communication to help staff adapt over time.",
+            d: "Analyze the policy to find and fix areas causing confusion."
+        },
+        answers: {
+            a: "Builder",
+            b: "Starter",
+            c: "Runner",
+            d: "Fixer"
+        }
+    }
+];
+
+function buildQuiz() {
+    const quizContainer = document.getElementById('quiz');
+    const output = [];
+
+    questions.forEach((currentQuestion, questionNumber) => {
+        const options = [];
+
+        for (letter in currentQuestion.options) {
+            options.push(
+                `<li>
+                    <label>
+                        <input type="radio" name="question${questionNumber}" value="${letter}">
+                        ${currentQuestion.options[letter]}
+                    </label>
+                </li>`
+            );
+        }
+
+        output.push(
+            `<div class="question">
+                <h2>${currentQuestion.question}</h2>
+                <ul class="options">${options.join('')}</ul>
+            </div>`
+        );
+    });
+
+    quizContainer.innerHTML = output.join('');
+}
+
+function submitQuiz() {
+    const resultContainer = document.getElementById('result');
+    const scores = { Starter: 0, Builder: 0, Fixer: 0, Runner: 0 };
+
+    questions.forEach((currentQuestion, questionNumber) => {
+        const selectedOption = document.querySelector(`input[name=question${questionNumber}]:checked`);
+
+        if (selectedOption) {
+            const answer = selectedOption.value;
+            const role = currentQuestion.answers[answer];
+            scores[role]++;
+        }
+    });
+
+    const maxScore = Math.max(scores.Starter, scores.Builder, scores.Fixer, scores.Runner);
+    const roles = Object.keys(scores).filter(role => scores[role] === maxScore);
+
+    let tallyMessage = `<h2>Your Scores:</h2>
+    <ul>
+        <li><strong>Starter:</strong> ${scores.Starter}</li>
+        <li><strong>Builder:</strong> ${scores.Builder}</li>
+        <li><strong>Fixer:</strong> ${scores.Fixer}</li>
+        <li><strong>Runner:</strong> ${scores.Runner}</li>
+    </ul>`;
+
+    let resultMessage = '';
+
+    roles.forEach(role => {
+        if (role === 'Starter') {
+            resultMessage += `<h2>You are a Starter!</h2>
+            <p><strong>Description:</strong> You love the challenges of starting new things. The blank canvas excites you, and you're driven by innovation and creativity.</p>
+            <p><strong>Strengths:</strong> Visionary thinking, adaptability, enthusiasm for new ideas.</p>
+            <p><strong>Career Tips:</strong> Seek roles that allow you to pioneer new projects or ventures.</p>`;
+        }
+        if (role === 'Builder') {
+            resultMessage += `<h2>You are a Builder!</h2>
+            <p><strong>Description:</strong> You're motivated by growing something from small to large. Scaling up operations and seeing tangible growth energizes you.</p>
+            <p><strong>Strengths:</strong> Strategic planning, resource management, growth-focused mindset.</p>
+            <p><strong>Career Tips:</strong> Look for opportunities where you can expand and develop existing projects.</p>`;
+        }
+        if (role === 'Fixer') {
+            resultMessage += `<h2>You are a Fixer!</h2>
+            <p><strong>Description:</strong> You thrive on turning around troubled situations. Complex problems are intellectually stimulating for you.</p>
+            <p><strong>Strengths:</strong> Problem-solving, analytical skills, resilience.</p>
+            <p><strong>Career Tips:</strong> Engage in roles that involve troubleshooting and making significant improvements.</p>`;
+        }
+        if (role === 'Runner') {
+            resultMessage += `<h2>You are a Runner!</h2>
+            <p><strong>Description:</strong> You excel at maintaining and optimizing ongoing operations. Consistency and reliability are your hallmarks.</p>
+            <p><strong>Strengths:</strong> Attention to detail, process optimization, steady management.</p>
+            <p><strong>Career Tips:</strong> Find positions where you can ensure long-term success and stability.</p>`;
+        }
+    });
+
+    resultContainer.innerHTML = tallyMessage + resultMessage;
+}
+
+buildQuiz();
+</script>
+
+</body>
+</html>
